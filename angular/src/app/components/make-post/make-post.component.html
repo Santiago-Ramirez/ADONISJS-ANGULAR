@@ -1,0 +1,178 @@
+<div class="container mt-5">
+<div class="row">
+    <div class="col-md-6 offset-3">
+        <div class="card text-white bg-dark ml-5 border border-primary" style="border-radius: 25px;">
+            <div class="card-body">
+                <form #f="ngForm" (ngSubmit)='crear(f)'> 
+                    <div class="form-group">
+                      <input 
+                      type="text" 
+                      class="form-control" 
+                      id="title"
+                      name="title"
+                      #title="ngModel"
+                      [(ngModel)] = "post.title"
+                      placeholder="Insert Title"
+                      required>
+                    </div>
+                    <div class="form-group">
+                      <textarea type="text"
+                       class="form-control"
+                        id="body"
+                        name="body"
+                        #body="ngModel"
+                        [(ngModel)] = "post.body"
+                         placeholder="Insert Body"
+                         required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-info">Post</button>
+                    </div>
+                  </form>
+            </div>
+          </div>
+        
+    </div>
+</div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col">
+              <div class="mt-5 custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="customSwitch1" (click)="ocultarinfo()">
+                <label class="custom-control-label" for="customSwitch1">Mostrar Publicaciones</label>
+              </div>
+    </div>
+  </div>
+</div>
+              
+
+<div class="container mt-5" [ngClass]="{'d-none': bandera2 == false}">
+    <div class="row">
+        <div class="col-md-4" *ngFor="let post of posts2; let i = index">
+        <div class="card text-white bg-dark mt-5 mb-5 border border-danger" style="border-radius: 25px;">
+            <div class="card-body">
+              
+              <h4 class="card-title" id="user" [innerHTML]="post.user"></h4>
+              <hr style="padding: 0.3px; background-color: gray;">
+
+            <b> <p class="card-text" [innerHTML]="post.title"></p></b>
+              <p class="card-text" id="body" [innerHTML]="post.body"></p>
+
+              <hr style="padding: 0.3px; background-color: gray;">
+
+              <a type="button" class="card-link mb-3" (click)="mostrarModalInfo(i)">Comments</a>
+              <form #f2="ngForm" (ngSubmit)='crearComentario(f2, i)'> 
+                <div class="form-group" >
+                  <input 
+                  type="text" 
+                  class="form-control" 
+                  
+                  name="bodyC"
+                  #bodyC="ngModel"
+                  [(ngModel)] = "comment.body">
+                </div>
+                <div class="form-group" >
+
+                  <button type="submit"  class="btn btn-info">comment</button>
+                
+              </div>
+              </form>
+              <a type="button" class="card-link" (click)="mostrarpost(i)" *ngIf="post.user==this.user">ActualizarPost</a>
+              <a type="button" class="card-link" (click)="borrarPost(i)" *ngIf="post.user==this.user">BorrarPost</a>
+            </div>
+            </div>
+          </div>
+    </div>
+</div>
+
+<ng-template #myModalInfo let-modal>
+ 
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Comments</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+      
+
+               <div class="card text-white bg-dark mb-3"  *ngFor="let comm of comments; let j = index">
+                    <div class="card-body" >
+                      <h5 [innerHTML]="comm.user"></h5>
+                        <p [innerHTML]="comm.body"></p>
+                        <a type="button" class="card-link" (click)="mostrarcomentario(j)" *ngIf="comm.user==this.user">ActualizarComent</a>
+                        <a type="button" class="card-link" (click)="borrarComentario(j)" *ngIf="comm.user==this.user">BorrarComm</a>
+                        
+                    </div>
+                  </div>
+                  
+
+
+    </div>
+  </div>
+  
+ 
+</ng-template>
+
+<ng-template #myModalInfo2 let-modal>
+ 
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">UPDATE POST</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+      <form #f3="ngForm" (ngSubmit)='actualizarpost(f3)'>
+        <input 
+        type="text" 
+        class="form-control" 
+        id="title"
+        name="title"
+        #title="ngModel"
+        [(ngModel)] = "post.title"
+        required>
+        <br>
+        <input type="text"
+         class="form-control"
+          id="body"
+          name="body"
+          #body="ngModel"
+          [(ngModel)] = "post.body"
+           required>
+        <br>
+        <button type="submit"  class="btn btn-info">Actualizar</button>
+        </form>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #myModalInfo3 let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">UPDATE COMMENT</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+      <form #f4="ngForm" (ngSubmit)='actualizarcomment(f4)'>
+        <input type="text"
+         class="form-control"
+          id="body"
+          name="body"
+          #body="ngModel"
+          [(ngModel)] = "post.body"
+           required>
+           <br>
+        <button type="submit"  class="btn btn-info">Actualizar</button>
+        </form>
+    </div>
+  </div>
+  
+ 
+</ng-template>
