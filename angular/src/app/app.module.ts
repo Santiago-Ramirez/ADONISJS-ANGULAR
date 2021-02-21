@@ -16,6 +16,7 @@ import { MakePostComponent } from './components/make-post/make-post.component';
 import { NgbModule, NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from './services/auth.service';
 import { AuthInterceptorService } from './interceptors/auth-interceptor.service';
+import { RutaNovalidaComponent } from './components/ruta-novalida/ruta-novalida.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,7 +25,9 @@ import { AuthInterceptorService } from './interceptors/auth-interceptor.service'
     HomeComponent,
     NavbarComponent,
     PostsComponent,
-    MakePostComponent
+    MakePostComponent,
+    RutaNovalidaComponent,
+    RutaNovalidaComponent
   ],
   imports: [
     BrowserModule,

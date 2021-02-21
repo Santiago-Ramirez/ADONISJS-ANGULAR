@@ -1,32 +1,26 @@
 <div class="container mt-5">
 <div class="row">
     <div class="col-md-6 offset-3">
-        <div class="card text-white bg-dark ml-5 border border-primary" style="border-radius: 25px;">
+        <div class="card text-white bg-dark ml-5 border border-primary shadow" style="border-radius: 25px;">
             <div class="card-body">
-                <form #f="ngForm" (ngSubmit)='crear(f)'> 
+                <form [formGroup]="postForm" (ngSubmit)="post2()"> 
                     <div class="form-group">
                       <input 
                       type="text" 
                       class="form-control" 
-                      id="title"
-                      name="title"
-                      #title="ngModel"
-                      [(ngModel)] = "post.title"
-                      placeholder="Insert Title"
-                      required>
+                      formControlName="title"
+                      placeholder="Titulo.."
+                      [class.is-invalid]="titleValidate">
                     </div>
                     <div class="form-group">
                       <textarea type="text"
                        class="form-control"
-                        id="body"
-                        name="body"
-                        #body="ngModel"
-                        [(ngModel)] = "post.body"
-                         placeholder="Insert Body"
-                         required></textarea>
+                        formControlName="body"
+                         placeholder="Descripción.."
+                         [class.is-invalid]="bodyValidate"></textarea>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-info">Post</button>
+                        <button type="submit" class="btn btn-info">Publicar</button>
                     </div>
                   </form>
             </div>
@@ -45,52 +39,55 @@
     </div>
   </div>
 </div>
+
               
 
 <div class="container mt-5" [ngClass]="{'d-none': bandera2 == false}">
     <div class="row">
         <div class="col-md-4" *ngFor="let post of posts2; let i = index">
-        <div class="card text-white bg-dark mt-5 mb-5 border border-danger" style="border-radius: 25px;">
+        <div class="card text-white bg-dark mt-5 mb-5 border border-info shadow" style="border-radius: 25px;">
             <div class="card-body">
-              
-              <h4 class="card-title" id="user" [innerHTML]="post.user"></h4>
-              <hr style="padding: 0.3px; background-color: gray;">
 
-            <b> <p class="card-text" [innerHTML]="post.title"></p></b>
-              <p class="card-text" id="body" [innerHTML]="post.body"></p>
-
-              <hr style="padding: 0.3px; background-color: gray;">
-
-              <a type="button" class="card-link mb-3" (click)="mostrarModalInfo(i)">Comments</a>
-              <form #f2="ngForm" (ngSubmit)='crearComentario(f2, i)'> 
-                <div class="form-group" >
-                  <input 
-                  type="text" 
-                  class="form-control" 
-                  
-                  name="bodyC"
-                  #bodyC="ngModel"
-                  [(ngModel)] = "comment.body">
+              <div class="row">
+                <div class="col">
+                  <h4 class="card-title" id="user" [innerHTML]="post.user"></h4>
                 </div>
-                <div class="form-group" >
-
-                  <button type="submit"  class="btn btn-info">comment</button>
-                
+                <div class="col">
+                  <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" *ngIf="post.user==this.user" style="font-size: 20px; margin-top: -5px; margin-left: 120px;" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                      <a class="dropdown-item" (click)="mostrarpost(i)" style="cursor: pointer;">Editar</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" (click)="borrarPost(i)" style="cursor: pointer;">Eliminar</a>
+                    </div>
+                  </div>
+                </div>
               </div>
-              </form>
-              <a type="button" class="card-link" (click)="mostrarpost(i)" *ngIf="post.user==this.user">ActualizarPost</a>
-              <a type="button" class="card-link" (click)="borrarPost(i)" *ngIf="post.user==this.user">BorrarPost</a>
+              <hr style="padding: 0.5px; background-color: gray;">
+
+            <b> <p class="text-dark bg-light card-text mb-3 mt-5" [innerHTML]="post.title"></p></b>
+              <p class="card-text mb-5" id="body" [innerHTML]="post.body"></p>
+
+
+              <a type="button" class="card-link mb-3" (click)="mostrarModalInfo(i)">Ver comentarios</a>
+              <hr style="padding: 0.5px; background-color: gray;">
+
+                <div class="form-group" >
+                  <button type="button"  class="btn btn-info" (click)="mostrarModalInfo4(i)" *ngIf="post.id>0">Comentar</button>
+              </div>
             </div>
             </div>
           </div>
     </div>
 </div>
 
+
 <ng-template #myModalInfo let-modal>
  
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title">Comments</h5>
+      <h5 class="modal-title">Comentarios</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -100,10 +97,25 @@
 
                <div class="card text-white bg-dark mb-3"  *ngFor="let comm of comments; let j = index">
                     <div class="card-body" >
-                      <h5 [innerHTML]="comm.user"></h5>
-                        <p [innerHTML]="comm.body"></p>
-                        <a type="button" class="card-link" (click)="mostrarcomentario(j)" *ngIf="comm.user==this.user">ActualizarComent</a>
-                        <a type="button" class="card-link" (click)="borrarComentario(j)" *ngIf="comm.user==this.user">BorrarComm</a>
+
+                      <div class="row">
+                        <div class="col">
+                          <h4 class="card-title" id="user" [innerHTML]="comm.user"></h4>
+                          <hr style="padding: 0.5px; background-color: gray;">
+                          <p [innerHTML]="comm.body"></p>
+                        </div>
+                        <div class="col">
+                          <div class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" *ngIf="comm.user==this.user" style="font-size: 20px; margin-top: -5px; margin-left: 120px;" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                              <a class="dropdown-item" (click)="mostrarcomentario(j)" style="cursor: pointer;">Editar</a>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" (click)="borrarComentario(j)" style="cursor: pointer;">Eliminar</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                         
                     </div>
                   </div>
@@ -116,11 +128,40 @@
  
 </ng-template>
 
+<ng-template #myModalInfo4 let-modal>
+ 
+  <div class="modal-content" >
+    <div class="modal-header">
+      <h5 class="modal-title">Realiza un comentario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" > 
+      <form #f2="ngForm" (ngSubmit)='crearComentario(f2)'> 
+        <div class="form-group" >
+          <input 
+          type="text" 
+          class="form-control" 
+          name="bodyC"
+          #bodyC="ngModel"
+          [(ngModel)] = "comment.body"
+          placeholder="Comenta aquí.."
+          >
+        </div>
+        <div class="form-group" >
+          <button type="submit"  class="btn btn-info">Comentar</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</ng-template>
+
 <ng-template #myModalInfo2 let-modal>
  
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title">UPDATE POST</h5>
+      <h5 class="modal-title">Editar Publicación</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -134,6 +175,7 @@
         name="title"
         #title="ngModel"
         [(ngModel)] = "post.title"
+        placeholder="Titulo.."
         required>
         <br>
         <input type="text"
@@ -142,9 +184,10 @@
           name="body"
           #body="ngModel"
           [(ngModel)] = "post.body"
+          placeholder="Descripción.."
            required>
         <br>
-        <button type="submit"  class="btn btn-info">Actualizar</button>
+        <button type="submit"  class="btn btn-info">Editar</button>
         </form>
     </div>
   </div>
@@ -154,7 +197,7 @@
 <ng-template #myModalInfo3 let-modal>
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title">UPDATE COMMENT</h5>
+      <h5 class="modal-title">Editar Comentario</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.close()">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -169,10 +212,11 @@
           [(ngModel)] = "post.body"
            required>
            <br>
-        <button type="submit"  class="btn btn-info">Actualizar</button>
+        <button type="submit"  class="btn btn-info">Editar</button>
         </form>
     </div>
   </div>
   
  
 </ng-template>
+

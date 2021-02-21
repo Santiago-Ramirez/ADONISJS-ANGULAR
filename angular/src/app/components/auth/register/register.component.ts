@@ -47,6 +47,12 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  get usernameValidate(){
+    return (
+      this.registerForm.get('username').invalid && this.registerForm.get('username').touched
+    );
+  }
+
   get emailValidate(){
     return (
       this.registerForm.get('email').invalid && this.registerForm.get('email').touched
